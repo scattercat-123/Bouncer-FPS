@@ -16,7 +16,7 @@ var rot : Vector2
 var basefov = 75.0
 var maxfov = 120.0
 var fovkick = 0.0
-var swingaccel = 30
+var swingaccel = 40
 
 var health = 100
 var spawnpoint = Vector3(0, 2, 0)
@@ -27,21 +27,25 @@ var decaltex : Texture2D = preload("res://assets/images/32x32_Impact_13.png")
 
 var shooting = false
 var can_shot = true
-var dspd = 100.0
+var dspd = 120.0
 var ddur = 0.3
 var dtim = 0.0
 
-var kbstr = 30.0
+var kbstr = 25.0
 var kbvelo = Vector3.ZERO
-var wallaccel = 140.0
+var wallaccel = 130.0
 var wallduration = 0.25
 var walltime = 0.0
 var walldir = Vector3.ZERO
-var grip = 60.0
-var brake = 150.0
-var accel = 32.0
-var decel = 1000.0
-var aircontrol = 0.4
+var max_speed = 150.0
+var ground_accel = 200.0
+var air_accel = 130.0
+var ground_turn = 20.0
+var air_turn = 14.0
+var ground_friction = 20.0
+var air_friction = 10.0
+var stop_speed = 8.0
+var overspeed_drag = 25.0
 var bouncing = false
 
 var canboost = false
@@ -162,29 +166,33 @@ func _physics_process(delta: float) -> void:
 		velocity.x += walldir.x * wallaccel * delta
 		velocity.z += walldir.z * wallaccel * delta
 
+	if dtim > 0.0:
+		dtim -= delta
+		has_knockback = true
+		if dtim <= 0.0:
+			shooting = false
+
 	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
 	if not has_knockback and not grappling:
-		var rate = accel
-		var gripr = grip
-		var braker = brake
-		if not is_on_floor():
-			rate *= aircontrol
-			gripr *= aircontrol
-			braker *= aircontrol
+		var on_floor = is_on_floor()
 		var hvel = Vector2(velocity.x, velocity.z)
+		var speed = hvel.length()
 		if direction:
 			var dir2 = Vector2(direction.x, direction.z)
+			if speed > 0.01:
+				var turn = ground_turn if on_floor else air_turn
+				hvel = hvel.lerp(dir2 * speed, clampf(turn * delta, 0.0, 1.0))
 			var along = hvel.dot(dir2)
-			var side = hvel - dir2 * along
-			side = side.move_toward(Vector2.ZERO, gripr * delta)
-			if along < 0.0:
-				along = move_toward(along, 0.0, braker * delta)
-			hvel = dir2 * along + side
-			hvel += dir2 * rate * delta
+			if along < max_speed:
+				var rate = ground_accel if on_floor else air_accel
+				hvel += dir2 * minf(rate * delta, max_speed - along)
+			elif speed > max_speed:
+				hvel = hvel.move_toward(hvel.normalized() * max_speed, overspeed_drag * delta)
 		else:
-			hvel = hvel.move_toward(Vector2.ZERO, decel * delta)
+			var fric = ground_friction if on_floor else air_friction
+			hvel = hvel.move_toward(Vector2.ZERO, maxf(speed, stop_speed) * fric * delta)
 		velocity.x = hvel.x
 		velocity.z = hvel.y
 
@@ -203,12 +211,6 @@ func _physics_process(delta: float) -> void:
 			if away > 0.0:
 				velocity -= dir * away
 			velocity -= dir * (curopel - ropel) * 10.0
-
-	if dtim > 0.0:
-		dtim -= delta
-		has_knockback = true
-		if dtim <= 0.0:
-			shooting = false
 
 	if Input.is_action_just_pressed("grapple"):
 		grapel()
