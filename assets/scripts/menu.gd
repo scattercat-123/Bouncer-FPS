@@ -2,6 +2,12 @@ extends Node2D
 @onready var bouncer: Label = $bouncer
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
+const MAIN = preload("res://assets/scenes/main.tscn")
+
+func _ready() -> void:
+	if Global.debug_mode:
+		get_tree().change_scene_to_packed(MAIN)
+
 func _on_settings_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
 		pass
@@ -12,7 +18,7 @@ func _on_play_gui_input(event: InputEvent) -> void:
 		$butttons.visible = false
 		$bouncer.visible = false
 		await animation_player.animation_finished
-		get_tree().change_scene_to_file("res://assets/scenes/main.tscn")
+		get_tree().change_scene_to_packed(MAIN)
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	var tween = create_tween()
