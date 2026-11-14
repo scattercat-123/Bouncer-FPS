@@ -16,3 +16,12 @@ mesh = SubResource("CapsuleMesh_ifeun")
 shape = SubResource("CapsuleShape3D_ifeun")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1726273238]
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D" unique_id=1819968315]
+target_position = Vector3(0, 0, -50)
+
+[node name="Timer" type="Timer" parent="." unique_id=1468773022]
+wait_time = 0.2
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
