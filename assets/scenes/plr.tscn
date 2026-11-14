@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bv5uqduc2xf1h"]
+
+[ext_resource type="Script" uid="uid://slbfrf7reu" path="res://plr.gd" id="1_65v1u"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ifeun"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ifeun"]
+
+[node name="plr" type="CharacterBody3D" unique_id=1038331023]
+script = ExtResource("1_65v1u")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1311114787]
+mesh = SubResource("CapsuleMesh_ifeun")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1594342694]
+shape = SubResource("CapsuleShape3D_ifeun")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1726273238]

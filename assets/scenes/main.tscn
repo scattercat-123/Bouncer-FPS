@@ -1,3 +1,40 @@
 [gd_scene format=3 uid="uid://biskixola4sha"]
 
+[ext_resource type="PackedScene" uid="uid://bv5uqduc2xf1h" path="res://assets/scenes/plr.tscn" id="1_mr7gh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mr7gh"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_kpi06"]
+sky_material = SubResource("ProceduralSkyMaterial_mr7gh")
+
+[sub_resource type="Environment" id="Environment_dfgan"]
+background_mode = 2
+sky = SubResource("Sky_kpi06")
+
+[sub_resource type="BoxMesh" id="BoxMesh_ifeun"]
+size = Vector3(26.02246, 0.14453125, 15.496338)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_nb5qc"]
+data = PackedVector3Array(-13.0112, 0.072299995, 7.7482, 13.0112, 0.072299995, 7.7482, -13.0112, -0.072299995, 7.7482, 13.0112, 0.072299995, 7.7482, 13.0112, -0.072299995, 7.7482, -13.0112, -0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, -13.0112, 0.072299995, -7.7482, 13.0112, -0.072299995, -7.7482, -13.0112, 0.072299995, -7.7482, -13.0112, -0.072299995, -7.7482, 13.0112, -0.072299995, -7.7482, 13.0112, 0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, 13.0112, -0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, 13.0112, -0.072299995, -7.7482, 13.0112, -0.072299995, 7.7482, -13.0112, 0.072299995, -7.7482, -13.0112, 0.072299995, 7.7482, -13.0112, -0.072299995, -7.7482, -13.0112, 0.072299995, 7.7482, -13.0112, -0.072299995, 7.7482, -13.0112, -0.072299995, -7.7482, 13.0112, 0.072299995, 7.7482, -13.0112, 0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, -13.0112, 0.072299995, 7.7482, -13.0112, 0.072299995, -7.7482, 13.0112, 0.072299995, -7.7482, -13.0112, -0.072299995, 7.7482, 13.0112, -0.072299995, 7.7482, -13.0112, -0.072299995, -7.7482, 13.0112, -0.072299995, 7.7482, 13.0112, -0.072299995, -7.7482, -13.0112, -0.072299995, -7.7482)
+
 [node name="Main" type="Node3D" unique_id=536249546]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2095945684]
+environment = SubResource("Environment_dfgan")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1769156271]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1034249400]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1796908506]
+mesh = SubResource("BoxMesh_ifeun")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=920647247]
+shape = SubResource("ConcavePolygonShape3D_nb5qc")
+
+[node name="plr" parent="." unique_id=1038331023 instance=ExtResource("1_mr7gh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3841147, 0)
