@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjx04r3qqo8ga"
-path.s3tc="res://.godot/imported/bouncebaba.png-a568a67dc5e2fa0c13b53c5767994da6.s3tc.ctex"
+uid="uid://bosa5id4h5mqg"
+path.s3tc="res://.godot/imported/bouncebabacrate.png-f842d1c4469eb6795c7c5e398bf4b967.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/scenes/bouncebaba.png"
-dest_files=["res://.godot/imported/bouncebaba.png-a568a67dc5e2fa0c13b53c5767994da6.s3tc.ctex"]
+source_file="res://assets/images/bouncebabacrate.png"
+dest_files=["res://.godot/imported/bouncebabacrate.png-f842d1c4469eb6795c7c5e398bf4b967.s3tc.ctex"]
 
 [params]
 

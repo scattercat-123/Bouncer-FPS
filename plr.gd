@@ -7,7 +7,7 @@ var MOUSE_SENSITIVITY = 0.01
 var camimp : Vector2
 var rot : Vector2
 
-var kbstr = 10.0
+var kbstr = 20.0
 var kbvelo = Vector3.ZERO
 
 var wallaccel = 100.0

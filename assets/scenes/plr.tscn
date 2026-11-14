@@ -4988,3 +4988,6 @@ texture_filter = 1
 position = Vector2(960, 540)
 scale = Vector2(5, 5)
 texture = ExtResource("8_llmdb")
+
+[node name="Timer" type="Timer" parent="." unique_id=1006094352]
+wait_time = 0.2
