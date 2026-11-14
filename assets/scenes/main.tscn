@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://biskixola4sha"]
 
+[ext_resource type="Texture2D" uid="uid://cjx04r3qqo8ga" path="res://assets/scenes/bouncebaba.png" id="1_kpi06"]
 [ext_resource type="PackedScene" uid="uid://bv5uqduc2xf1h" path="res://assets/scenes/plr.tscn" id="1_mr7gh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mr7gh"]
@@ -14,7 +15,14 @@ background_mode = 2
 sky = SubResource("Sky_kpi06")
 
 [sub_resource type="BoxMesh" id="BoxMesh_ifeun"]
-size = Vector3(26.02246, 0.14453125, 15.496338)
+size = Vector3(26, 0.15, 15.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_18nbs"]
+albedo_color = Color(0.67939395, 0.695421, 0.6493226, 1)
+albedo_texture = ExtResource("1_kpi06")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_nb5qc"]
 data = PackedVector3Array(-13.0112, 0.072299995, 7.7482, 13.0112, 0.072299995, 7.7482, -13.0112, -0.072299995, 7.7482, 13.0112, 0.072299995, 7.7482, 13.0112, -0.072299995, 7.7482, -13.0112, -0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, -13.0112, 0.072299995, -7.7482, 13.0112, -0.072299995, -7.7482, -13.0112, 0.072299995, -7.7482, -13.0112, -0.072299995, -7.7482, 13.0112, -0.072299995, -7.7482, 13.0112, 0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, 13.0112, -0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, 13.0112, -0.072299995, -7.7482, 13.0112, -0.072299995, 7.7482, -13.0112, 0.072299995, -7.7482, -13.0112, 0.072299995, 7.7482, -13.0112, -0.072299995, -7.7482, -13.0112, 0.072299995, 7.7482, -13.0112, -0.072299995, 7.7482, -13.0112, -0.072299995, -7.7482, 13.0112, 0.072299995, 7.7482, -13.0112, 0.072299995, 7.7482, 13.0112, 0.072299995, -7.7482, -13.0112, 0.072299995, 7.7482, -13.0112, 0.072299995, -7.7482, 13.0112, 0.072299995, -7.7482, -13.0112, -0.072299995, 7.7482, 13.0112, -0.072299995, 7.7482, -13.0112, -0.072299995, -7.7482, 13.0112, -0.072299995, 7.7482, 13.0112, -0.072299995, -7.7482, -13.0112, -0.072299995, -7.7482)
@@ -31,7 +39,9 @@ shadow_enabled = true
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1034249400]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1796908506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7970922, 1.4300593, 0.30069304)
 mesh = SubResource("BoxMesh_ifeun")
+surface_material_override/0 = SubResource("StandardMaterial3D_18nbs")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=920647247]
 shape = SubResource("ConcavePolygonShape3D_nb5qc")
