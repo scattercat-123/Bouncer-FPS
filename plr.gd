@@ -1,5 +1,5 @@
 extends CharacterBody3D
-
+# THIS Game is good?
 @onready var gun_animation_player: AnimationPlayer = $Camera3D/fake_gun/AnimationPlayer
 @onready var muzzle_flash: Node3D = $"muzzle flash"
 @onready var fake_gun: Node3D = $Camera3D/fake_gun
@@ -12,69 +12,67 @@ const AIM_SENSITIVITY = 0.0005
 var MOUSE_SENSITIVITY = BASE_SENSITIVITY
 var camimp : Vector2
 var rot : Vector2
-
+	
 var basefov = 75.0
 var maxfov = 120.0
 var fovkick = 0.0
-var swingaccel = 40
-
+var swingaccel = 20
 var health = 100
 var spawnpoint = Vector3(0, 2, 0)
-
 var weapon = "s"
 var has_shot = false
 var decaltex : Texture2D = preload("res://assets/images/32x32_Impact_13.png")
-
+		
 var shooting = false
 var can_shot = true
 var dspd = 120.0
 var ddur = 0.3
 var dtim = 0.0
-
+	
 var kbstr = 25.0
 var kbvelo = Vector3.ZERO
-var wallaccel = 130.0
+var wallaccel = 30.0
 var wallduration = 0.25
 var walltime = 0.0
 var walldir = Vector3.ZERO
-var max_speed = 150.0
-var ground_accel = 200.0
-var air_accel = 130.0
-var ground_turn = 20.0
+var max_speed = 80.0
+var ground_accel = 20.0
+var air_accel = 15.0
+var ground_turn = 20.0	
 var air_turn = 14.0
 var ground_friction = 20.0
 var air_friction = 10.0
 var stop_speed = 8.0
 var overspeed_drag = 25.0
 var bouncing = false
-
+	
 var canboost = false
 var nomarala
-
+			
 var grappling = false
 var grapoint = Vector3.ZERO
-var ropel = 0
+var ropel = 0	
 var curopel = 0
-var offset
+var offset	
 var relspd = 10.0
-
+	
 var rope : MeshInstance3D
-
+		
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
-
+	
 func _ready() -> void:
 	scale = Vector3(10, 10, 10)
 	add_to_group("sh")
 	$Camera3D.current = is_multiplayer_authority()
 	$Camera3D/RayCast3D.add_exception(self)
 	gun_line.add_exception(self)
-
+		
 	if is_multiplayer_authority():
 		$"player mesh/Node/Skeleton3D/Alpha_Surface".visible = false
 		$"player mesh/Node/Skeleton3D/Alpha_Joints".visible = false
 		global_position = spawnpoint + Vector3(randf_range(-70, 70), 70, randf_range(-70, 70))
-
+		
 	rope = MeshInstance3D.new()
 	var box = BoxMesh.new()
 	box.size = Vector3(0.1, 0.1, 1.0)
@@ -85,19 +83,19 @@ func _ready() -> void:
 	rope.top_level = true
 	rope.visible = false
 	add_child(rope)
-
+		
 	if knife_area:
 		knife_area.monitoring = true
-		knife_area.body_entered.connect(_on_knife_body_entered)
-
+		knife_area.body_entered.connect(_on_knife_body_entered)	
+	
 	set_weapon(weapon)
-
+	
 func set_weapon(w: String) -> void:
 	weapon = w
 	fake_gun.visible = (w == "s")
 	if knife_model:
 		knife_model.visible = (w == "k")
-
+		
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
@@ -115,23 +113,23 @@ func _input(event: InputEvent) -> void:
 				shoot()
 			elif weapon == "k":
 				knifeslice()
-
+	
 func _process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
-
+	
 	var is_aiming: bool = weapon == "s" and Input.is_action_pressed("right")
 	MOUSE_SENSITIVITY = AIM_SENSITIVITY if is_aiming else BASE_SENSITIVITY
 	$SubViewport/scope.visible = is_aiming
 	fake_gun.visible = (weapon == "s") and not is_aiming
-
+		
 	$SubViewport/HSlider.value = health
-
+	
 	rot = rot.lerp(camimp * MOUSE_SENSITIVITY, delta * 10.0)
-	rotation.y -= rot.x
+	rotation.y -= rot.x	
 	$Camera3D.rotation.x = clamp($Camera3D.rotation.x - rot.y, -1.5, 1.5)
-	camimp = Vector2.ZERO
-
+	camimp = Vector2.ZERO	
+	
 	var target: float
 	if is_aiming:
 		target = 20.0
@@ -144,18 +142,18 @@ func _process(delta: float) -> void:
 		target = clamp(target + fovkick, 50.0, maxfov)
 		fovkick = lerp(fovkick, 0.0, delta * 8.0)
 		$Camera3D.fov = lerp($Camera3D.fov, target, delta * 8.0)
-
+	
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
-
+	
 	var has_knockback = kbvelo != Vector3.ZERO
-	velocity += kbvelo
+	velocity += kbvelo	
 	kbvelo = Vector3.ZERO
-
+	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
+	
 	if Input.is_action_just_pressed("ui_accept") and canboost:
 		velocity.y = 20.0
 		canboost = false
@@ -195,13 +193,14 @@ func _physics_process(delta: float) -> void:
 			hvel = hvel.move_toward(Vector2.ZERO, maxf(speed, stop_speed) * fric * delta)
 		velocity.x = hvel.x
 		velocity.z = hvel.y
-
+		
 	if grappling:
+		
 		sync_rope.rpc(global_position, grapoint, true)
-
+		
 		var pull_dir = (grapoint - global_position).normalized()
 		velocity += pull_dir * swingaccel * delta
-
+	
 		ropel = move_toward(ropel, 2.0, relspd * delta)
 		offset = global_position - grapoint
 		curopel = offset.length()
@@ -211,41 +210,45 @@ func _physics_process(delta: float) -> void:
 			if away > 0.0:
 				velocity -= dir * away
 			velocity -= dir * (curopel - ropel) * 10.0
-
+	
 	if Input.is_action_just_pressed("grapple"):
-		grapel()
+		grapel()	
+		
 	if Input.is_action_just_released("grapple"):
 		grappling = false
 		sync_rope.rpc(Vector3.ZERO, Vector3.ZERO, false)
-
+			
 	move_and_slide()
 	detcol()
-
+	
 func detcol():
 	for i in get_slide_collision_count():
+			
 		var normal = get_slide_collision(i).get_normal()
 		if abs(normal.y) < 0.7:
+			
 			if walltime <= 0.0:
-				walldir = Vector3(normal.x, 0, normal.z).normalized()
-				walltime = wallduration
-				kbvelo = walldir * kbstr
-				canboost = true
-				$Timer.start()
-				nomarala = normal
+				
+					walldir = Vector3(normal.x, 0, normal.z).normalized()
+					walltime = wallduration
+					kbvelo = walldir * kbstr
+					canboost = true
+					$Timer.start()
+					nomarala = normal
 			return
 		bouncing = true
 		kbvelo = normal * kbstr
-
+		
 func _on_timer_timeout() -> void:
 	canboost = false
-
+		
 func grapel():
 	if $Camera3D/RayCast3D.get_collider() == null:
 		return
 	grapoint = $Camera3D/RayCast3D.get_collision_point()
 	grappling = true
 	ropel = global_position.distance_to(grapoint)
-
+	
 @rpc("any_peer", "call_local", "unreliable")
 func sync_rope(start: Vector3, point: Vector3, is_vis: bool) -> void:
 	rope.visible = is_vis
@@ -253,7 +256,7 @@ func sync_rope(start: Vector3, point: Vector3, is_vis: bool) -> void:
 		rope.global_position = (start + point) / 2.0
 		rope.look_at(point)
 		rope.scale = Vector3(1, 1, start.distance_to(point))
-
+	
 func shoot() -> void:
 	if gun_animation_player.is_playing():
 		return
@@ -267,22 +270,23 @@ func shoot() -> void:
 				make_decal(gun_line.get_collision_point(), gun_line.get_collision_normal())
 		play_shoot_effects.rpc()
 		has_shot = true
-	else:
+	else:	
 		play_reload_effects.rpc()
 		has_shot = false
-
+	
 @rpc("any_peer", "call_local")
 func play_shoot_effects() -> void:
 	gun_animation_player.play("shoot")
+		
 	muzzle_flash.shoot()
 	gun_line.enabled = true
 	await get_tree().create_timer(0.1).timeout
 	gun_line.enabled = false
-
+		
 @rpc("any_peer", "call_local")
 func play_reload_effects() -> void:
 	gun_animation_player.play("reload")
-
+		
 func make_decal(pos: Vector3, normal: Vector3):
 	var d = Decal.new()
 	d.size = Vector3(4, 4, 4)
@@ -302,29 +306,36 @@ func make_decal(pos: Vector3, normal: Vector3):
 	d.look_at(pos + normal, up)
 	d.rotate_object_local(Vector3.RIGHT, -PI / 2)
 	get_tree().create_timer(10.0).timeout.connect(d.queue_free)
-
+		
 func knifeslice():
 	if not can_shot:
 		return
+		
 	shooting = true
 	velocity = -$Camera3D.global_transform.basis.z * dspd
 	dtim = ddur
 	can_shot = false
 	get_tree().create_timer(2.0).timeout.connect(func(): can_shot = true)
-
+	
 func _on_knife_body_entered(body: Node3D) -> void:
 	if shooting and body != self and body.is_in_group("sh"):
+		
 		body.dmged.rpc_id(body.get_multiplayer_authority(), 20)
-
+		
 @rpc("any_peer", "call_local", "reliable")
 func dmged(dmg):
 	if not is_multiplayer_authority():
 		return
 	health -= dmg
 	if health <= 0:
+		
 		respawn()
-
+	
 func respawn():
 	health = 100
 	velocity = Vector3.ZERO
 	global_position = spawnpoint
+		
+		
+		
+	
