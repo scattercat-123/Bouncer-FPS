@@ -6,7 +6,7 @@ const MAIN = preload("res://assets/scenes/main.tscn")
 
 func _ready() -> void:
 	if Global.debug_mode:
-		get_tree().change_scene_to_packed(MAIN)
+		get_tree().change_scene_to_packed.call_deferred(MAIN)
 
 func _on_settings_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.is_pressed():

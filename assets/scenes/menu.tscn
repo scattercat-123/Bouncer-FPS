@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cb4k4r46rxkhw" path="res://assets/scripts/menu.gd" id="1_ugn2o"]
 [ext_resource type="FontFile" uid="uid://bbvukc4yhmqk1" path="res://assets/fonts/SpaceGrotesk-VariableFont_wght.ttf" id="2_xuqax"]
 [ext_resource type="FontFile" uid="uid://b6n4hwedivy5d" path="res://assets/fonts/NewRocker-Regular.ttf" id="3_q8r6g"]
+[ext_resource type="AudioStream" uid="uid://m66orwyfwywl" path="res://assets/sounds/main menu music(1).mp3" id="4_xuqax"]
 
 [sub_resource type="Animation" id="Animation_l0v2w"]
 length = 0.001
@@ -369,6 +370,10 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=251413700]
+stream = ExtResource("4_xuqax")
+autoplay = true
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="gui_input" from="butttons/settings" to="." method="_on_settings_gui_input"]
