@@ -7,6 +7,10 @@ var MOUSE_SENSITIVITY = 0.01
 var camimp : Vector2
 var rot : Vector2
 
+var kbstr = 10.0
+var kbvelo = Vector3.ZERO
+
+
 var bouncing = false
 
 func _input(event: InputEvent) -> void:
@@ -21,16 +25,17 @@ func _process(delta: float) -> void:
 	camimp = Vector2.ZERO
 
 func _physics_process(delta: float) -> void:
+	detcol()
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		pass
 	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction and !bouncing:
+	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
-	elif !bouncing and !direction:
+	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 	move_and_slide()
@@ -39,4 +44,4 @@ func detcol():
 	if get_slide_collision_count() != 0:
 		for i in get_slide_collision_count():
 			bouncing = true
-			velocity = velocity + (get_slide_collision(i).get_normal() * 10)
+			velocity = get_slide_collision(i).get_normal() * kbstr
